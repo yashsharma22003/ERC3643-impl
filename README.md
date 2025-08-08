@@ -72,4 +72,40 @@ This project is licensed under the [GNU General Public License v3.0](./LICENSE.m
    </a>
 </div>
 
+## Polygon Amoy Deployments
+
+Deployer account: 0x0af700A3026adFddC10f7Aa8Ba2419e8503592f7
+
+Phase 1: Deploying implementation contracts...
+- All implementation contracts deployed.
+
+Phase 2: Deploying authorities and factories...
+- IdentityImplementationAuthority deployed to: 0x86B01eDe35eD51061d60b2bA5F22830C583d4bE2
+- IdentityFactory deployed to: 0x137af86dBB80720B7123827A4d221026f5025416
+- TREXImplementationAuthority deployed to: 0x5E8DA73D8C4C4E549dD5016EC45C5702F1d740a2
+- TREX version set on TREXImplementationAuthority.
+- TREXFactory deployed to: 0x8040A9446c71C080A69A1FE8DdA7Cf5578268748
+- TREXFactory registered with IdentityFactory.
+
+Phase 3: Deploying user-facing proxy contracts...
+- ClaimTopicsRegistry (Proxy) deployed to: 0xfd76509aEC510C8efeF4F5A8c10C74a9cA338129
+- TrustedIssuersRegistry (Proxy) deployed to: 0xD3FE34F39e376Be9c0Cf447b2c2263A867091a8b
+- IdentityRegistryStorage (Proxy) deployed to: 0x6F216966050F8513c167A6bb9D03CAa9fc3cCCac
+- DefaultCompliance module deployed to: 0x1b1a55393Fb88F01b90683E9548FcF7ae2Bd348B
+- IdentityRegistry (Proxy) deployed to: 0xB4a91f196B43DcA8E815FC8d375a01704D3795f3
+- IdentityProxy (for management key 0x0af700A3026adFddC10f7Aa8Ba2419e8503592f7) deployed to: 0xB3Bf331E48BF97A277505fb472c2ce2337550EB7
+- Token "TREXDINO" (TREX) (Proxy) deployed to: 0xe3565d06336FE261bB6b9dacF44EFc7AE357B13F
+
+Phase 4: Configuring permissions and initial state...
+- IdentityRegistryStorage bound to IdentityRegistry.
+- Deployer set as an Agent on the Token.
+- Deployer and Token contract set as Agents on the IdentityRegistry.
+- Claim Topic "KYC_AML_VERIFIED" (0x18be04bd8d115b448043fa0b06bdadd1fadc4027c7123595b5671541dbaae317) added.
+- ClaimIssuer contract deployed at: 0x47E6b6730941561aaeba4D0037b03202F9cFe405
+- Associated signing key (for off-chain use): 0x0af700A3026adFddC10f7Aa8Ba2419e8503592f7
+- ClaimIssuer added to TrustedIssuersRegistry.
+- Token has been unpaused and is now transferable.
+
+✅ TREX suite deployment and configuration complete!
+
 ----

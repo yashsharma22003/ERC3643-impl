@@ -35,7 +35,7 @@ async function main() {
 
   // A random wallet to act as the signing key for the ClaimIssuer contract.
   // In a real scenario, this key would be managed securely off-chain.
-  const claimIssuerSigningKey = ethers.Wallet.createRandom();
+  const claimSignerAddress = deployer.address;
 
   // =======================================================================
   // PHASE 1: Deploying Foundational Implementations
@@ -180,15 +180,18 @@ async function main() {
   await claimTopicsRegistry.connect(deployer).addClaimTopic(claimTopics[0]);
   console.log(`- Claim Topic "KYC_AML_VERIFIED" (${claimTopics[0]}) added.`);
 
+// Tell the IdentityRegistry that this topic is now required for an identity to be 'verified'.
+// await identityRegistry.connect(deployer).addClaimTopic(claimTopics[0]);
+// console.log('- IdentityRegistry configured with required KYC claim topic.');
+
   // Deploy and configure a sample Claim Issuer contract, owned by the deployer
   const claimIssuerContract = await ethers.deployContract('ClaimIssuer', [deployer.address], deployer);
   await claimIssuerContract.deployed();
   await claimIssuerContract
-    .connect(deployer)
-    .addKey(ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['address'], [claimIssuerSigningKey.address])), 3, 1);
-  console.log(`- ClaimIssuer contract deployed at: ${claimIssuerContract.address}`);
-  console.log(`- Associated signing key (for off-chain use): ${claimIssuerSigningKey.address}`);
-
+  .connect(deployer)
+  .addKey(ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['address'], [claimSignerAddress])), 3, 1);
+console.log(`- ClaimIssuer contract deployed at: ${claimIssuerContract.address}`);
+console.log(`- Associated signing key (for off-chain use): ${claimSignerAddress}`);
   // Trust the newly deployed Claim Issuer
   await trustedIssuersRegistry.connect(deployer).addTrustedIssuer(claimIssuerContract.address, claimTopics);
   console.log('- ClaimIssuer added to TrustedIssuersRegistry.');
