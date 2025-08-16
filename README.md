@@ -74,7 +74,7 @@ This project is licensed under the [GNU General Public License v3.0](./LICENSE.m
 
 ## Polygon Amoy Deployments
 
-```javascript
+```json
 {
   "identityImplementation": "0x13a54D666CB9De39a1299C056Bd0A37B4E3687B9",
   "identityImplementationAuthority": "0x22b1394F0b70513423747964B0A3352B1703Fffc",
