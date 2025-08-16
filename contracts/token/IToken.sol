@@ -1,88 +1,19 @@
 // SPDX-License-Identifier: GPL-3.0
-//
-//                                             :+#####%%%%%%%%%%%%%%+
-//                                         .-*@@@%+.:+%@@@@@%%#***%@@%=
-//                                     :=*%@@@#=.      :#@@%       *@@@%=
-//                       .-+*%@%*-.:+%@@@@@@+.     -*+:  .=#.       :%@@@%-
-//                   :=*@@@@%%@@@@@@@@@%@@@-   .=#@@@%@%=             =@@@@#.
-//             -=+#%@@%#*=:.  :%@@@@%.   -*@@#*@@@@@@@#=:-              *@@@@+
-//            =@@%=:.     :=:   *@@@@@%#-   =%*%@@@@#+-.        =+       :%@@@%-
-//           -@@%.     .+@@@     =+=-.         @@#-           +@@@%-       =@@@@%:
-//          :@@@.    .+@@#%:                   :    .=*=-::.-%@@@+*@@=       +@@@@#.
-//          %@@:    +@%%*                         =%@@@@@@@@@@@#.  .*@%-       +@@@@*.
-//         #@@=                                .+@@@@%:=*@@@@@-      :%@%:      .*@@@@+
-//        *@@*                                +@@@#-@@%-:%@@*          +@@#.      :%@@@@-
-//       -@@%           .:-=++*##%%%@@@@@@@@@@@@*. :@+.@@@%:            .#@@+       =@@@@#:
-//      .@@@*-+*#%%%@@@@@@@@@@@@@@@@%%#**@@%@@@.   *@=*@@#                :#@%=      .#@@@@#-
-//      -%@@@@@@@@@@@@@@@*+==-:-@@@=    *@# .#@*-=*@@@@%=                 -%@@@*       =@@@@@%-
-//         -+%@@@#.   %@%%=   -@@:+@: -@@*    *@@*-::                   -%@@%=.         .*@@@@@#
-//            *@@@*  +@* *@@##@@-  #@*@@+    -@@=          .         :+@@@#:           .-+@@@%+-
-//             +@@@%*@@:..=@@@@*   .@@@*   .#@#.       .=+-       .=%@@@*.         :+#@@@@*=:
-//              =@@@@%@@@@@@@@@@@@@@@@@@@@@@%-      :+#*.       :*@@@%=.       .=#@@@@%+:
-//               .%@@=                 .....    .=#@@+.       .#@@@*:       -*%@@@@%+.
-//                 +@@#+===---:::...         .=%@@*-         +@@@+.      -*@@@@@%+.
-//                  -@@@@@@@@@@@@@@@@@@@@@@%@@@@=          -@@@+      -#@@@@@#=.
-//                    ..:::---===+++***###%%%@@@#-       .#@@+     -*@@@@@#=.
-//                                           @@@@@@+.   +@@*.   .+@@@@@%=.
-//                                          -@@@@@=   =@@%:   -#@@@@%+.
-//                                          +@@@@@. =@@@=  .+@@@@@*:
-//                                          #@@@@#:%@@#. :*@@@@#-
-//                                          @@@@@%@@@= :#@@@@+.
-//                                         :@@@@@@@#.:#@@@%-
-//                                         +@@@@@@-.*@@@*:
-//                                         #@@@@#.=@@@+.
-//                                         @@@@+-%@%=
-//                                        :@@@#%@%=
-//                                        +@@@@%-
-//                                        :#%%=
-//
-
-/**
- *     NOTICE
- *
- *     The T-REX software is licensed under a proprietary license or the GPL v.3.
- *     If you choose to receive it under the GPL v.3 license, the following applies:
- *     T-REX is a suite of smart contracts implementing the ERC-3643 standard and
- *     developed by Tokeny to manage and transfer financial assets on EVM blockchains
- *
- *     Copyright (C) 2023, Tokeny sàrl.
- *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 pragma solidity 0.8.17;
 
 import "../registry/interface/IIdentityRegistry.sol";
-import "../compliance/modular/IModularCompliance.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /// @dev interface
 interface IToken is IERC20 {
-
     /// events
 
     /**
-     *  this event is emitted when the token information is updated.
-     *  the event is emitted by the token init function and by the setTokenInformation function
-     *  `_newName` is the name of the token
-     *  `_newSymbol` is the symbol of the token
-     *  `_newDecimals` is the decimals of the token
-     *  `_newVersion` is the version of the token, current version is 3.0
+     *  this event is emitted when the onchainID  is updated.
+     *  the event is emitted by the token init function and by the setOnchainID function
      *  `_newOnchainID` is the address of the onchainID of the token
      */
-    event UpdatedTokenInformation(string indexed _newName, string indexed _newSymbol, uint8 _newDecimals, string
-    _newVersion, address indexed _newOnchainID);
+    event UpdatedOnchainID(address indexed _newOnchainID);
 
     /**
      *  this event is emitted when the IdentityRegistry has been set for the token
@@ -105,7 +36,11 @@ interface IToken is IERC20 {
      *  `_newWallet` is the address of the wallet that the investor provided for the recovery
      *  `_investorOnchainID` is the address of the onchainID of the investor who asked for a recovery
      */
-    event RecoverySuccess(address indexed _lostWallet, address indexed _newWallet, address indexed _investorOnchainID);
+    event RecoverySuccess(
+        address indexed _lostWallet,
+        address indexed _newWallet,
+        address indexed _investorOnchainID
+    );
 
     /**
      *  this event is emitted when the wallet of an investor is frozen or unfrozen
@@ -116,7 +51,11 @@ interface IToken is IERC20 {
      *  if `_isFrozen` equals `false` the wallet is unfrozen after emission of the event
      *  `_owner` is the address of the agent who called the function to freeze the wallet
      */
-    event AddressFrozen(address indexed _userAddress, bool indexed _isFrozen, address indexed _owner);
+    event AddressFrozen(
+        address indexed _userAddress,
+        bool indexed _isFrozen,
+        address indexed _owner
+    );
 
     /**
      *  this event is emitted when a certain amount of tokens is frozen on a wallet
@@ -133,38 +72,6 @@ interface IToken is IERC20 {
      *  `_amount` is the amount of tokens that are unfrozen
      */
     event TokensUnfrozen(address indexed _userAddress, uint256 _amount);
-
-    /**
-     *  this event is emitted when the token is paused
-     *  the event is emitted by the pause function
-     *  `_userAddress` is the address of the wallet that called the pause function
-     */
-    event Paused(address _userAddress);
-
-    /**
-     *  this event is emitted when the token is unpaused
-     *  the event is emitted by the unpause function
-     *  `_userAddress` is the address of the wallet that called the unpause function
-     */
-    event Unpaused(address _userAddress);
-
-    /// functions
-
-    /**
-     *  @dev sets the token name
-     *  @param _name the name of token to set
-     *  Only the owner of the token smart contract can call this function
-     *  emits a `UpdatedTokenInformation` event
-     */
-    function setName(string calldata _name) external;
-
-    /**
-     *  @dev sets the token symbol
-     *  @param _symbol the token symbol to set
-     *  Only the owner of the token smart contract can call this function
-     *  emits a `UpdatedTokenInformation` event
-     */
-    function setSymbol(string calldata _symbol) external;
 
     /**
      *  @dev sets the onchain ID of the token
@@ -205,7 +112,10 @@ interface IToken is IERC20 {
      *  This function can only be called by a wallet set as agent of the token
      *  emits a `TokensFrozen` event
      */
-    function freezePartialTokens(address _userAddress, uint256 _amount) external;
+    function freezePartialTokens(
+        address _userAddress,
+        uint256 _amount
+    ) external;
 
     /**
      *  @dev unfreezes token amount specified for given address
@@ -214,7 +124,10 @@ interface IToken is IERC20 {
      *  This function can only be called by a wallet set as agent of the token
      *  emits a `TokensUnfrozen` event
      */
-    function unfreezePartialTokens(address _userAddress, uint256 _amount) external;
+    function unfreezePartialTokens(
+        address _userAddress,
+        uint256 _amount
+    ) external;
 
     /**
      *  @dev sets the Identity Registry for the token
@@ -310,7 +223,10 @@ interface IToken is IERC20 {
      *  @param _amounts The number of tokens to transfer to the corresponding receiver
      *  emits _toList.length `Transfer` events
      */
-    function batchTransfer(address[] calldata _toList, uint256[] calldata _amounts) external;
+    function batchTransfer(
+        address[] calldata _toList,
+        uint256[] calldata _amounts
+    ) external;
 
     /**
      *  @dev function allowing to issue forced transfers in batch
@@ -341,7 +257,10 @@ interface IToken is IERC20 {
      *  This function can only be called by a wallet set as agent of the token
      *  emits _toList.length `Transfer` events
      */
-    function batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;
+    function batchMint(
+        address[] calldata _toList,
+        uint256[] calldata _amounts
+    ) external;
 
     /**
      *  @dev function allowing to burn tokens in batch
@@ -353,7 +272,10 @@ interface IToken is IERC20 {
      *  This function can only be called by a wallet set as agent of the token
      *  emits _userAddresses.length `Transfer` events
      */
-    function batchBurn(address[] calldata _userAddresses, uint256[] calldata _amounts) external;
+    function batchBurn(
+        address[] calldata _userAddresses,
+        uint256[] calldata _amounts
+    ) external;
 
     /**
      *  @dev function allowing to set frozen addresses in batch
@@ -364,7 +286,10 @@ interface IToken is IERC20 {
      *  This function can only be called by a wallet set as agent of the token
      *  emits _userAddresses.length `AddressFrozen` events
      */
-    function batchSetAddressFrozen(address[] calldata _userAddresses, bool[] calldata _freeze) external;
+    function batchSetAddressFrozen(
+        address[] calldata _userAddresses,
+        bool[] calldata _freeze
+    ) external;
 
     /**
      *  @dev function allowing to freeze tokens partially in batch
@@ -375,7 +300,10 @@ interface IToken is IERC20 {
      *  This function can only be called by a wallet set as agent of the token
      *  emits _userAddresses.length `TokensFrozen` events
      */
-    function batchFreezePartialTokens(address[] calldata _userAddresses, uint256[] calldata _amounts) external;
+    function batchFreezePartialTokens(
+        address[] calldata _userAddresses,
+        uint256[] calldata _amounts
+    ) external;
 
     /**
      *  @dev function allowing to unfreeze tokens partially in batch
@@ -386,7 +314,10 @@ interface IToken is IERC20 {
      *  This function can only be called by a wallet set as agent of the token
      *  emits _userAddresses.length `TokensUnfrozen` events
      */
-    function batchUnfreezePartialTokens(address[] calldata _userAddresses, uint256[] calldata _amounts) external;
+    function batchUnfreezePartialTokens(
+        address[] calldata _userAddresses,
+        uint256[] calldata _amounts
+    ) external;
 
     /**
      * @dev Returns the number of decimals used to get its user representation.
@@ -434,12 +365,7 @@ interface IToken is IERC20 {
     /**
      *  @dev Returns the Compliance contract linked to the token
      */
-    function compliance() external view returns (IModularCompliance);
-
-    /**
-     * @dev Returns true if the contract is paused, and false otherwise.
-     */
-    function paused() external view returns (bool);
+    function compliance() external view returns (address);
 
     /**
      *  @dev Returns the freezing status of a wallet
@@ -456,5 +382,7 @@ interface IToken is IERC20 {
      *  the amount of frozen tokens is always <= to the total balance of the wallet
      *  @param _userAddress the address of the wallet on which getFrozenTokens is called
      */
-    function getFrozenTokens(address _userAddress) external view returns (uint256);
+    function getFrozenTokens(
+        address _userAddress
+    ) external view returns (uint256);
 }

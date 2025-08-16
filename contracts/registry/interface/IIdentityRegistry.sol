@@ -1,68 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
-//
-//                                             :+#####%%%%%%%%%%%%%%+
-//                                         .-*@@@%+.:+%@@@@@%%#***%@@%=
-//                                     :=*%@@@#=.      :#@@%       *@@@%=
-//                       .-+*%@%*-.:+%@@@@@@+.     -*+:  .=#.       :%@@@%-
-//                   :=*@@@@%%@@@@@@@@@%@@@-   .=#@@@%@%=             =@@@@#.
-//             -=+#%@@%#*=:.  :%@@@@%.   -*@@#*@@@@@@@#=:-              *@@@@+
-//            =@@%=:.     :=:   *@@@@@%#-   =%*%@@@@#+-.        =+       :%@@@%-
-//           -@@%.     .+@@@     =+=-.         @@#-           +@@@%-       =@@@@%:
-//          :@@@.    .+@@#%:                   :    .=*=-::.-%@@@+*@@=       +@@@@#.
-//          %@@:    +@%%*                         =%@@@@@@@@@@@#.  .*@%-       +@@@@*.
-//         #@@=                                .+@@@@%:=*@@@@@-      :%@%:      .*@@@@+
-//        *@@*                                +@@@#-@@%-:%@@*          +@@#.      :%@@@@-
-//       -@@%           .:-=++*##%%%@@@@@@@@@@@@*. :@+.@@@%:            .#@@+       =@@@@#:
-//      .@@@*-+*#%%%@@@@@@@@@@@@@@@@%%#**@@%@@@.   *@=*@@#                :#@%=      .#@@@@#-
-//      -%@@@@@@@@@@@@@@@*+==-:-@@@=    *@# .#@*-=*@@@@%=                 -%@@@*       =@@@@@%-
-//         -+%@@@#.   %@%%=   -@@:+@: -@@*    *@@*-::                   -%@@%=.         .*@@@@@#
-//            *@@@*  +@* *@@##@@-  #@*@@+    -@@=          .         :+@@@#:           .-+@@@%+-
-//             +@@@%*@@:..=@@@@*   .@@@*   .#@#.       .=+-       .=%@@@*.         :+#@@@@*=:
-//              =@@@@%@@@@@@@@@@@@@@@@@@@@@@%-      :+#*.       :*@@@%=.       .=#@@@@%+:
-//               .%@@=                 .....    .=#@@+.       .#@@@*:       -*%@@@@%+.
-//                 +@@#+===---:::...         .=%@@*-         +@@@+.      -*@@@@@%+.
-//                  -@@@@@@@@@@@@@@@@@@@@@@%@@@@=          -@@@+      -#@@@@@#=.
-//                    ..:::---===+++***###%%%@@@#-       .#@@+     -*@@@@@#=.
-//                                           @@@@@@+.   +@@*.   .+@@@@@%=.
-//                                          -@@@@@=   =@@%:   -#@@@@%+.
-//                                          +@@@@@. =@@@=  .+@@@@@*:
-//                                          #@@@@#:%@@#. :*@@@@#-
-//                                          @@@@@%@@@= :#@@@@+.
-//                                         :@@@@@@@#.:#@@@%-
-//                                         +@@@@@@-.*@@@*:
-//                                         #@@@@#.=@@@+.
-//                                         @@@@+-%@%=
-//                                        :@@@#%@%=
-//                                        +@@@@%-
-//                                        :#%%=
-//
-/**
- *     NOTICE
- *
- *     The T-REX software is licensed under a proprietary license or the GPL v.3.
- *     If you choose to receive it under the GPL v.3 license, the following applies:
- *     T-REX is a suite of smart contracts implementing the ERC-3643 standard and
- *     developed by Tokeny to manage and transfer financial assets on EVM blockchains
- *
- *     Copyright (C) 2023, Tokeny sàrl.
- *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 pragma solidity 0.8.17;
 
-import "./ITrustedIssuersRegistry.sol";
+import "./IClaimIssuersRegistry.sol";
 import "./IClaimTopicsRegistry.sol";
 import "./IIdentityRegistryStorage.sol";
 
@@ -75,21 +14,25 @@ interface IIdentityRegistry {
      *  the event is emitted by the IdentityRegistry constructor
      *  `claimTopicsRegistry` is the address of the Claim Topics Registry contract
      */
-    event ClaimTopicsRegistrySet(address indexed claimTopicsRegistry);
+    event ClaimTopicsRegistrySet(
+        IClaimTopicsRegistry indexed claimTopicsRegistry
+    );
 
     /**
      *  this event is emitted when the IdentityRegistryStorage has been set for the IdentityRegistry
      *  the event is emitted by the IdentityRegistry constructor
      *  `identityStorage` is the address of the Identity Registry Storage contract
      */
-    event IdentityStorageSet(address indexed identityStorage);
+    event IdentityStorageSet(IIdentityRegistryStorage indexed identityStorage);
 
     /**
-     *  this event is emitted when the TrustedIssuersRegistry has been set for the IdentityRegistry
+     *  this event is emitted when the ClaimIssuersRegistry has been set for the IdentityRegistry
      *  the event is emitted by the IdentityRegistry constructor
-     *  `trustedIssuersRegistry` is the address of the Trusted Issuers Registry contract
+     *  `claimIssuersRegistry` is the address of the Claim Issuers Registry contract
      */
-    event TrustedIssuersRegistrySet(address indexed trustedIssuersRegistry);
+    event ClaimIssuersRegistrySet(
+        IClaimIssuersRegistry indexed claimIssuersRegistry
+    );
 
     /**
      *  this event is emitted when an Identity is registered into the Identity Registry.
@@ -97,7 +40,10 @@ interface IIdentityRegistry {
      *  `investorAddress` is the address of the investor's wallet
      *  `identity` is the address of the Identity smart contract (onchainID)
      */
-    event IdentityRegistered(address indexed investorAddress, IIdentity indexed identity);
+    event IdentityRegistered(
+        address indexed investorAddress,
+        IIdentity indexed identity
+    );
 
     /**
      *  this event is emitted when an Identity is removed from the Identity Registry.
@@ -105,7 +51,10 @@ interface IIdentityRegistry {
      *  `investorAddress` is the address of the investor's wallet
      *  `identity` is the address of the Identity smart contract (onchainID)
      */
-    event IdentityRemoved(address indexed investorAddress, IIdentity indexed identity);
+    event IdentityRemoved(
+        address indexed investorAddress,
+        IIdentity indexed identity
+    );
 
     /**
      *  this event is emitted when an Identity has been updated
@@ -113,7 +62,10 @@ interface IIdentityRegistry {
      *  `oldIdentity` is the old Identity contract's address to update
      *  `newIdentity` is the new Identity contract's
      */
-    event IdentityUpdated(IIdentity indexed oldIdentity, IIdentity indexed newIdentity);
+    event IdentityUpdated(
+        IIdentity indexed oldIdentity,
+        IIdentity indexed newIdentity
+    );
 
     /**
      *  this event is emitted when an Identity's country has been updated
@@ -121,7 +73,10 @@ interface IIdentityRegistry {
      *  `investorAddress` is the address on which the country has been updated
      *  `country` is the numeric code (ISO 3166-1) of the new country
      */
-    event CountryUpdated(address indexed investorAddress, uint16 indexed country);
+    event CountryUpdated(
+        address indexed investorAddress,
+        uint16 indexed country
+    );
 
     /**
      *  @dev Register an identity contract corresponding to a user address.
@@ -153,7 +108,9 @@ interface IIdentityRegistry {
      *  @param _identityRegistryStorage The address of the new Identity Registry Storage
      *  emits `IdentityStorageSet` event
      */
-    function setIdentityRegistryStorage(address _identityRegistryStorage) external;
+    function setIdentityRegistryStorage(
+        IIdentityRegistryStorage _identityRegistryStorage
+    ) external;
 
     /**
      *  @dev Replace the actual claimTopicsRegistry contract with a new one.
@@ -161,15 +118,19 @@ interface IIdentityRegistry {
      *  @param _claimTopicsRegistry The address of the new claim Topics Registry
      *  emits `ClaimTopicsRegistrySet` event
      */
-    function setClaimTopicsRegistry(address _claimTopicsRegistry) external;
+    function setClaimTopicsRegistry(
+        IClaimTopicsRegistry _claimTopicsRegistry
+    ) external;
 
     /**
-     *  @dev Replace the actual trustedIssuersRegistry contract with a new one.
+     *  @dev Replace the actual claimIssuersRegistry contract with a new one.
      *  This function can only be called by the wallet set as owner of the smart contract
-     *  @param _trustedIssuersRegistry The address of the new Trusted Issuers Registry
-     *  emits `TrustedIssuersRegistrySet` event
+     *  @param _claimIssuersRegistry The address of the new Claim Issuers Registry
+     *  emits `ClaimIssuersRegistrySet` event
      */
-    function setTrustedIssuersRegistry(address _trustedIssuersRegistry) external;
+    function setClaimIssuersRegistry(
+        IClaimIssuersRegistry _claimIssuersRegistry
+    ) external;
 
     /**
      *  @dev Updates the country corresponding to a user address.
@@ -220,7 +181,7 @@ interface IIdentityRegistry {
     /**
      *  @dev This functions checks whether an identity contract
      *  corresponding to the provided user address has the required claims or not based
-     *  on the data fetched from trusted issuers registry and from the claim topics registry
+     *  on the data fetched from claim issuers registry and from the claim topics registry
      *  @param _userAddress The address of the user to be verified.
      *  @return 'True' if the address is verified, 'false' if not.
      */
@@ -236,7 +197,9 @@ interface IIdentityRegistry {
      *  @dev Returns the country code of an investor.
      *  @param _userAddress The wallet of the investor
      */
-    function investorCountry(address _userAddress) external view returns (uint16);
+    function investorCountry(
+        address _userAddress
+    ) external view returns (uint16);
 
     /**
      *  @dev Returns the IdentityRegistryStorage linked to the current IdentityRegistry.
@@ -244,9 +207,9 @@ interface IIdentityRegistry {
     function identityStorage() external view returns (IIdentityRegistryStorage);
 
     /**
-     *  @dev Returns the TrustedIssuersRegistry linked to the current IdentityRegistry.
+     *  @dev Returns the ClaimIssuersRegistry linked to the current IdentityRegistry.
      */
-    function issuersRegistry() external view returns (ITrustedIssuersRegistry);
+    function issuersRegistry() external view returns (IClaimIssuersRegistry);
 
     /**
      *  @dev Returns the ClaimTopicsRegistry linked to the current IdentityRegistry.
